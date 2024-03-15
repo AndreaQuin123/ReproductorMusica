@@ -172,15 +172,16 @@ public class AddCancion extends javax.swing.JFrame {
     }//GEN-LAST:event_ArtistaTextActionPerformed
 
     private void AgregarBTNMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AgregarBTNMouseClicked
-        
+
         lista.insertar(Reproductor.elegirCancion.getSelectedFile(), NombreText.getText(), ArtistaText.getText(), TipoText.getText());
 
-        Nodo lastInsertedNode = lista.primero;
+        System.out.println(lista.primero);
         
-        while (lastInsertedNode.getSiguiente() != null) {
+        Nodo lastInsertedNode = lista.primero;
+
+        while (lastInsertedNode.getSiguiente() != lista.primero) {
             lastInsertedNode = lastInsertedNode.getSiguiente();
         }
-        
 
         listaCanciones.put(Imagen.getIcon(), lastInsertedNode);
 
@@ -198,6 +199,10 @@ public class AddCancion extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "No se eligio una imagen.");
         }
+        
+        
+       
+        
     }//GEN-LAST:event_CambiarBTNMouseClicked
 
     public static void main(String args[]) {

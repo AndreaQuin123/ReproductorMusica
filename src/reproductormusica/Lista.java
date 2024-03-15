@@ -13,7 +13,8 @@ public class Lista {
         private final String nombre;
         private final String artista;
         private final String tipo;
-        private Nodo siguiente;
+        Nodo siguiente;
+        Nodo anterior;
 
         public Nodo(File valor, String nombre, String artista, String tipo) {
             this.valor = valor;
@@ -22,6 +23,10 @@ public class Lista {
             this.artista= artista;
             this.tipo = tipo;
             this.siguiente = null;
+        }
+
+        public Nodo getAnterior() {
+            return anterior;
         }
 
         public File getValor() {
@@ -62,32 +67,33 @@ public class Lista {
         this.primero = null;
         this.posicion = 0;
     }
-    
-    public void insertar(File valor, String nombre, String artista, String tipo){
+
+    public void insertar(File valor, String nombre, String artista, String tipo) {
         Nodo nodo = new Nodo(valor, nombre, artista, tipo);
-        
-        //se tiene que referir a si mismo si es el primero
-        if (primero == null ){
+
+        if (primero == null) {
             primero = nodo;
             nodo.siguiente = nodo;
         } else {
             nodo.siguiente = primero.siguiente;
             primero.siguiente = nodo;
+            primero = nodo;
         }
-
     }
 
     public DefaultListModel<String> listar() {
+
         DefaultListModel<String> model = new DefaultListModel<>();
 
-        Nodo actual = primero;
-        while (actual != null) {
-            model.addElement(actual.getValor().toString());
-            actual = actual.siguiente;
-        }
-        
+        if (primero != null) {
+            Nodo actual = primero;
 
-        if (model.isEmpty()) {
+            do {
+                model.addElement(actual.getValor().toString());
+                actual = actual.siguiente;
+                
+            } while (actual != primero);
+        } else {
             model.addElement("No hay canciones agregadas aun.");
         }
 

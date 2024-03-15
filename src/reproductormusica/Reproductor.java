@@ -34,6 +34,8 @@ public class Reproductor extends javax.swing.JFrame {
         
         CancionesLista.setModel(lista.listar());
         
+        System.out.println(lista.listar());
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -192,18 +194,18 @@ public class Reproductor extends javax.swing.JFrame {
             */
             FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
             elegirCancion.setFileFilter(filter);
-            
+
             cancionElegida = elegirCancion.showOpenDialog(this);
             if (cancionElegida == JFileChooser.APPROVE_OPTION) {
-                JOptionPane.showMessageDialog(null, "File elegido: "+ elegirCancion.getSelectedFile().getName());
+                JOptionPane.showMessageDialog(null, "File elegido: " + elegirCancion.getSelectedFile().getName());
             } else {
                 JOptionPane.showMessageDialog(null, "No se eligio una cancion.");
             }
-            
+
             /*
             Pasa al otro JFrame para editar detalles.
-            */
-                        AddCancion pasar = new AddCancion(cancionElegida);
+             */
+            AddCancion pasar = new AddCancion(cancionElegida);
             pasar.setVisible(true);
             this.setVisible(false);
 
