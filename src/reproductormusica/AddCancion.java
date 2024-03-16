@@ -4,6 +4,7 @@
  */
 package reproductormusica;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.logging.Level;
@@ -12,7 +13,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.Icon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import reproductormusica.Lista.Nodo;
 
 public class AddCancion extends javax.swing.JFrame {
@@ -21,19 +21,21 @@ public class AddCancion extends javax.swing.JFrame {
     private Lista lista;
 
     //primer file es imagen y el nodo es el file del uhghghuhfudhg de la cancion
-    private Hashtable<Icon, Nodo> listaCanciones;
+    static Hashtable<Icon, Nodo> listaCanciones;
 
-    public AddCancion(int cancion) throws UnsupportedAudioFileException, IOException {
-        lista = lista != null ? lista : new Lista();
+    public AddCancion(int cancion, Lista lista) throws UnsupportedAudioFileException, IOException {
         this.cancion = cancion;
+        this.lista = lista;
         listaCanciones = new Hashtable<>();
 
         initComponents();
 
         setLocationRelativeTo(null);
 
+        if (Reproductor.elegirCancion.getSelectedFile() != null) {
         NombreText.setText(Reproductor.elegirCancion.getSelectedFile().getName());
         PathText.setText(Reproductor.elegirCancion.getSelectedFile().getAbsolutePath());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -173,21 +175,25 @@ public class AddCancion extends javax.swing.JFrame {
 
     private void AgregarBTNMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AgregarBTNMouseClicked
 
-        lista.insertar(Reproductor.elegirCancion.getSelectedFile(), NombreText.getText(), ArtistaText.getText(), TipoText.getText());
-
-        System.out.println(lista.primero);
+        File valor = Reproductor.elegirCancion.getSelectedFile();
         
-        Nodo lastInsertedNode = lista.primero;
+        if (valor != null) {
+            String nombre = NombreText.getText();
+            String artista = ArtistaText.getText();
+            String tipo = TipoText.getText();
 
-        while (lastInsertedNode.getSiguiente() != lista.primero) {
-            lastInsertedNode = lastInsertedNode.getSiguiente();
+            Nodo nodo = new Nodo(valor, nombre, artista, tipo);
+            lista.insertar(nodo);
+
+            System.out.println("Add cancion: " + lista.primero);
+            listaCanciones.put(Imagen.getIcon(), lista.ultimo);
+
+            Reproductor pasar = new Reproductor(lista);
+            pasar.setVisible(true);
+            this.setVisible(false);
+        } else {
+            JOptionPane.showMessageDialog(this, "No se seleccionó ningún archivo de canción.");
         }
-
-        listaCanciones.put(Imagen.getIcon(), lastInsertedNode);
-
-        Reproductor pasar = new Reproductor();
-        pasar.setVisible(true);
-        this.setVisible(false);
 
     }//GEN-LAST:event_AgregarBTNMouseClicked
 
@@ -195,14 +201,14 @@ public class AddCancion extends javax.swing.JFrame {
         JFileChooser elegirImagen = new JFileChooser();
         int imagenElegida = elegirImagen.showOpenDialog(this);
         if (imagenElegida == JFileChooser.APPROVE_OPTION) {
-            JOptionPane.showMessageDialog(null, "File elegido: " + elegirImagen.getSelectedFile().getName());
+            File selectedImageFile = elegirImagen.getSelectedFile();
+
+            Imagen.setIcon(new javax.swing.ImageIcon(selectedImageFile.getAbsolutePath()));
         } else {
             JOptionPane.showMessageDialog(null, "No se eligio una imagen.");
         }
-        
-        
-       
-        
+
+
     }//GEN-LAST:event_CambiarBTNMouseClicked
 
     public static void main(String args[]) {
@@ -233,7 +239,7 @@ public class AddCancion extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new AddCancion(0) .setVisible(true);
+                    new AddCancion(0, new Lista()).setVisible(true);
                 } catch (UnsupportedAudioFileException ex) {
                     Logger.getLogger(AddCancion.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {

@@ -6,27 +6,20 @@ import javax.swing.JList;
 
 public class Lista {
 
-    //Creando la clase de Nodo
     public static class Nodo {
 
-        private File valor;
+        private final File valor;
         private final String nombre;
         private final String artista;
         private final String tipo;
         Nodo siguiente;
-        Nodo anterior;
 
         public Nodo(File valor, String nombre, String artista, String tipo) {
             this.valor = valor;
-            this.siguiente = null;
             this.nombre = nombre;
-            this.artista= artista;
+            this.artista = artista;
             this.tipo = tipo;
             this.siguiente = null;
-        }
-
-        public Nodo getAnterior() {
-            return anterior;
         }
 
         public File getValor() {
@@ -49,40 +42,33 @@ public class Lista {
             return tipo;
         }
 
-        public void setValor(File valor) {
-            this.valor = valor;
-        }
-
         public void setSiguiente(Nodo siguiente) {
             this.siguiente = siguiente;
         }
-
     }
 
-    //Clase de lista
+    // Lista class
     Nodo primero;
-    private int posicion;
+    Nodo ultimo;
 
     public Lista() {
         this.primero = null;
-        this.posicion = 0;
+        this.ultimo = null;
     }
 
-    public void insertar(File valor, String nombre, String artista, String tipo) {
-        Nodo nodo = new Nodo(valor, nombre, artista, tipo);
-
+    public void insertar(Nodo nodo) {
         if (primero == null) {
             primero = nodo;
             nodo.siguiente = nodo;
+            ultimo = nodo;
         } else {
-            nodo.siguiente = primero.siguiente;
-            primero.siguiente = nodo;
-            primero = nodo;
+            nodo.siguiente = primero;
+            ultimo.siguiente = nodo;
+            ultimo = nodo;
         }
     }
 
     public DefaultListModel<String> listar() {
-
         DefaultListModel<String> model = new DefaultListModel<>();
 
         if (primero != null) {
@@ -91,13 +77,11 @@ public class Lista {
             do {
                 model.addElement(actual.getValor().toString());
                 actual = actual.siguiente;
-                
             } while (actual != primero);
         } else {
-            model.addElement("No hay canciones agregadas aun.");
+            model.addElement("No hay canciones agregadas aún.");
         }
 
         return model;
     }
-
 }
